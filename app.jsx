@@ -60,14 +60,13 @@ const profiles = [
   }
 ];
 
-export default function OccultTinder() {
+function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matches, setMatches] = useState([]);
   const [showMatch, setShowMatch] = useState(false);
   const [decision, setDecision] = useState(null);
-  const [activeTab, setActiveTab] = useState('swipe'); // 'swipe' ou 'profile'
+  const [activeTab, setActiveTab] = useState('swipe');
   
-  // Estado do perfil do usuário
   const [userProfile, setUserProfile] = useState({
     name: "Seu Nome",
     age: 25,
@@ -113,13 +112,13 @@ export default function OccultTinder() {
 
   const getElementIcon = (element) => {
     const icons = {
-      'Sangue': <Flame className="w-4 h-4" />,
-      'Morte': <Skull className="w-4 h-4" />,
-      'Energia': <Eye className="w-4 h-4" />,
-      'Conhecimento': <Moon className="w-4 h-4" />,
-      'Medo': <Eye className="w-4 h-4" />
+      'Sangue': '🔥',
+      'Morte': '💀',
+      'Energia': '⚡',
+      'Conhecimento': '🌙',
+      'Medo': '👁️'
     };
-    return icons[element] || <Moon className="w-4 h-4" />;
+    return icons[element] || '🌙';
   };
 
   const getElementColor = (element) => {
@@ -140,13 +139,11 @@ export default function OccultTinder() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-red-500 mb-2">🔥 Tinder Paranormal</h1>
           <p className="text-gray-400 text-sm">Conexões além do véu da realidade</p>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab('swipe')}
@@ -170,7 +167,6 @@ export default function OccultTinder() {
           </button>
         </div>
 
-        {/* Conteúdo - Swipe */}
         {activeTab === 'swipe' && (
           <>
             <div className={`relative bg-gradient-to-b ${getElementColor(currentProfile.element)} rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
@@ -187,7 +183,7 @@ export default function OccultTinder() {
                     <h2 className="text-2xl font-bold text-white">{currentProfile.name}, {currentProfile.age}</h2>
                   </div>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
-                    {getElementIcon(currentProfile.element)}
+                    <span className="text-sm">{getElementIcon(currentProfile.element)}</span>
                     <span className="text-sm text-white">{currentProfile.element}</span>
                   </div>
                 </div>
@@ -220,13 +216,13 @@ export default function OccultTinder() {
                 onClick={() => handleSwipe(false)}
                 className="bg-red-600 hover:bg-red-700 p-5 rounded-full shadow-lg transition-all hover:scale-110"
               >
-                <X className="w-8 h-8 text-white" />
+                <span className="text-3xl">✖️</span>
               </button>
               <button
                 onClick={() => handleSwipe(true)}
                 className="bg-green-600 hover:bg-green-700 p-5 rounded-full shadow-lg transition-all hover:scale-110"
               >
-                <Heart className="w-8 h-8 text-white" />
+                <span className="text-3xl">❤️</span>
               </button>
             </div>
 
@@ -236,13 +232,11 @@ export default function OccultTinder() {
           </>
         )}
 
-        {/* Conteúdo - Perfil */}
         {activeTab === 'profile' && (
           <div className={`bg-gradient-to-b ${getElementColor(isEditing ? editProfile.element : userProfile.element)} rounded-2xl shadow-2xl overflow-hidden`}>
             
             {!isEditing ? (
               <>
-                {/* Visualização do Perfil */}
                 <div className="h-96 flex items-center justify-center text-9xl bg-black/30">
                   {userProfile.photo}
                 </div>
@@ -253,7 +247,7 @@ export default function OccultTinder() {
                       <h2 className="text-2xl font-bold text-white">{userProfile.name}, {userProfile.age}</h2>
                     </div>
                     <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
-                      {getElementIcon(userProfile.element)}
+                      <span className="text-sm">{getElementIcon(userProfile.element)}</span>
                       <span className="text-sm text-white">{userProfile.element}</span>
                     </div>
                   </div>
@@ -275,18 +269,16 @@ export default function OccultTinder() {
                     }}
                     className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"
                   >
-                    <Settings className="w-5 h-5" />
+                    <span>⚙️</span>
                     Editar Perfil
                   </button>
                 </div>
               </>
             ) : (
               <>
-                {/* Edição do Perfil */}
                 <div className="p-6 bg-black/50 backdrop-blur space-y-4">
                   <h3 className="text-xl font-bold text-white mb-4">Editar Perfil</h3>
                   
-                  {/* Escolher Emoji */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Escolha seu ícone:</label>
                     <div className="flex flex-wrap gap-2">
@@ -306,7 +298,6 @@ export default function OccultTinder() {
                     </div>
                   </div>
 
-                  {/* Nome */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Nome:</label>
                     <input
@@ -317,7 +308,6 @@ export default function OccultTinder() {
                     />
                   </div>
 
-                  {/* Idade */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Idade:</label>
                     <input
@@ -328,7 +318,6 @@ export default function OccultTinder() {
                     />
                   </div>
 
-                  {/* Elemento */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Elemento Paranormal:</label>
                     <select
@@ -344,7 +333,6 @@ export default function OccultTinder() {
                     </select>
                   </div>
 
-                  {/* Bio */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Bio:</label>
                     <textarea
@@ -355,7 +343,6 @@ export default function OccultTinder() {
                     />
                   </div>
 
-                  {/* Interesses */}
                   <div>
                     <label className="text-gray-300 text-sm mb-2 block">Interesses (separados por vírgula):</label>
                     <input
@@ -369,7 +356,6 @@ export default function OccultTinder() {
                     />
                   </div>
 
-                  {/* Botões */}
                   <div className="flex gap-3 pt-4">
                     <button
                       onClick={handleCancelEdit}
@@ -391,7 +377,6 @@ export default function OccultTinder() {
         )}
       </div>
 
-      {/* Modal de Match */}
       {showMatch && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 animate-pulse">
           <div className="text-center">
@@ -403,4 +388,7 @@ export default function OccultTinder() {
       )}
     </div>
   );
-        }
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
