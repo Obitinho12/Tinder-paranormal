@@ -1,0 +1,406 @@
+import React, { useState } from 'react';
+import { Heart, X, Skull, Eye, Moon, Flame, User, Settings } from 'lucide-react';
+
+const profiles = [
+  {
+    name: "Andy",
+    age: 26,
+    element: "Morte",
+    photo: "🖤",
+    bio: "Tatuadora e médium. Minhas tattoos carregam proteções reais. Fumo, bebo e converso com mortos. Se isso te assusta, swipe left.",
+    interests: ["Tatuagem", "Whiskey", "Rituais noturnos", "Rock alternativo"]
+  },
+  {
+    name: "Karina",
+    age: 24,
+    element: "Energia",
+    photo: "⚡",
+    bio: "Artista e canalizadora. Minhas tattoos são sigilos que eu mesma criei. Curto energia boa, música alta e quem não tem medo de intensidade.",
+    interests: ["Arte", "Música indie", "Sigilos", "Energia sexual"]
+  },
+  {
+    name: "Emy",
+    age: 23,
+    element: "Conhecimento",
+    photo: "🌙",
+    bio: "Estudante de runas e astrologia. Cabelo lilás porque sim. Adoro estética fofinha mas sei banir entidades. Procuro alguém pra ler tarô junto.",
+    interests: ["Astrologia", "Cristais", "Café com leite", "Moda alternativa"]
+  },
+  {
+    name: "Henry",
+    age: 28,
+    element: "Sangue",
+    photo: "🩸",
+    bio: "Bartender e ritualista. Misturo drinks e rituais de sangue com a mesma maestria. Procuro alguém que curta noites longas e conversas profundas.",
+    interests: ["Mixologia", "Ocultismo", "Jazz", "Madrugadas"]
+  },
+  {
+    name: "Zanj",
+    age: 27,
+    element: "Medo",
+    photo: "👁️",
+    bio: "Trabalho nas sombras. Literalmente. Se você consegue me ver, já é um bom sinal. Busco alguém que não fuja do desconhecido.",
+    interests: ["Parkour urbano", "Fotografia noturna", "Exploração", "Cafeína"]
+  },
+  {
+    name: "Marcus Vieira",
+    age: 28,
+    element: "Sangue",
+    photo: "🩸",
+    bio: "Ocultista de Sangue. Trabalho com rituais de proteção. Procuro alguém que entenda a importância dos sacrifícios necessários.",
+    interests: ["Rituais", "Ocultismo Clássico", "Café da manhã tarde"]
+  },
+  {
+    name: "Luna Carvalho",
+    age: 25,
+    element: "Morte",
+    photo: "💀",
+    bio: "Medium desde criança. Se você não tem medo do Outro Lado, me chama. Adoro gatos pretos e cemitérios antigos.",
+    interests: ["Necromancia", "Gatos", "Música gótica"]
+  }
+];
+
+export default function OccultTinder() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [matches, setMatches] = useState([]);
+  const [showMatch, setShowMatch] = useState(false);
+  const [decision, setDecision] = useState(null);
+  const [activeTab, setActiveTab] = useState('swipe'); // 'swipe' ou 'profile'
+  
+  // Estado do perfil do usuário
+  const [userProfile, setUserProfile] = useState({
+    name: "Seu Nome",
+    age: 25,
+    element: "Sangue",
+    photo: "🔥",
+    bio: "Escreva sua bio aqui...",
+    interests: ["Interesse 1", "Interesse 2", "Interesse 3"]
+  });
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editProfile, setEditProfile] = useState({...userProfile});
+
+  const currentProfile = profiles[currentIndex];
+
+  const handleSwipe = (liked) => {
+    setDecision(liked ? 'like' : 'nope');
+    
+    setTimeout(() => {
+      if (liked && Math.random() > 0.5) {
+        setMatches([...matches, currentProfile]);
+        setShowMatch(true);
+        setTimeout(() => setShowMatch(false), 2000);
+      }
+      
+      if (currentIndex < profiles.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        setCurrentIndex(0);
+      }
+      setDecision(null);
+    }, 300);
+  };
+
+  const handleSaveProfile = () => {
+    setUserProfile({...editProfile});
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditProfile({...userProfile});
+    setIsEditing(false);
+  };
+
+  const getElementIcon = (element) => {
+    const icons = {
+      'Sangue': <Flame className="w-4 h-4" />,
+      'Morte': <Skull className="w-4 h-4" />,
+      'Energia': <Eye className="w-4 h-4" />,
+      'Conhecimento': <Moon className="w-4 h-4" />,
+      'Medo': <Eye className="w-4 h-4" />
+    };
+    return icons[element] || <Moon className="w-4 h-4" />;
+  };
+
+  const getElementColor = (element) => {
+    const colors = {
+      'Sangue': 'from-red-900 to-red-700',
+      'Morte': 'from-gray-900 to-gray-700',
+      'Energia': 'from-blue-900 to-blue-700',
+      'Conhecimento': 'from-purple-900 to-purple-700',
+      'Medo': 'from-green-900 to-green-700'
+    };
+    return colors[element] || 'from-gray-900 to-gray-700';
+  };
+
+  const emojis = ["🔥", "💀", "🖤", "⚡", "🌙", "👁️", "🩸", "🔪", "💜", "🕷️"];
+
+  if (!currentProfile && activeTab === 'swipe') return null;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold text-red-500 mb-2">🔥 Tinder Paranormal</h1>
+          <p className="text-gray-400 text-sm">Conexões além do véu da realidade</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setActiveTab('swipe')}
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'swipe' 
+                ? 'bg-red-600 text-white' 
+                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+            }`}
+          >
+            Explorar
+          </button>
+          <button
+            onClick={() => setActiveTab('profile')}
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'profile' 
+                ? 'bg-red-600 text-white' 
+                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+            }`}
+          >
+            Meu Perfil
+          </button>
+        </div>
+
+        {/* Conteúdo - Swipe */}
+        {activeTab === 'swipe' && (
+          <>
+            <div className={`relative bg-gradient-to-b ${getElementColor(currentProfile.element)} rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
+              decision === 'like' ? 'translate-x-8 rotate-6' : decision === 'nope' ? '-translate-x-8 -rotate-6' : ''
+            }`}>
+              
+              <div className="h-96 flex items-center justify-center text-9xl bg-black/30">
+                {currentProfile.photo}
+              </div>
+
+              <div className="p-6 bg-black/50 backdrop-blur">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">{currentProfile.name}, {currentProfile.age}</h2>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
+                    {getElementIcon(currentProfile.element)}
+                    <span className="text-sm text-white">{currentProfile.element}</span>
+                  </div>
+                </div>
+
+                <p className="text-gray-200 text-sm mb-4">{currentProfile.bio}</p>
+
+                <div className="flex flex-wrap gap-2">
+                  {currentProfile.interests.map((interest, i) => (
+                    <span key={i} className="bg-white/10 px-3 py-1 rounded-full text-xs text-gray-300">
+                      {interest}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {decision === 'like' && (
+                <div className="absolute top-8 right-8 text-green-400 text-6xl font-bold rotate-12 opacity-80">
+                  MATCH!
+                </div>
+              )}
+              {decision === 'nope' && (
+                <div className="absolute top-8 left-8 text-red-400 text-6xl font-bold -rotate-12 opacity-80">
+                  NOPE
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-center gap-6 mt-6">
+              <button
+                onClick={() => handleSwipe(false)}
+                className="bg-red-600 hover:bg-red-700 p-5 rounded-full shadow-lg transition-all hover:scale-110"
+              >
+                <X className="w-8 h-8 text-white" />
+              </button>
+              <button
+                onClick={() => handleSwipe(true)}
+                className="bg-green-600 hover:bg-green-700 p-5 rounded-full shadow-lg transition-all hover:scale-110"
+              >
+                <Heart className="w-8 h-8 text-white" />
+              </button>
+            </div>
+
+            <div className="text-center mt-6 text-gray-400 text-sm">
+              {matches.length} matches paranormais
+            </div>
+          </>
+        )}
+
+        {/* Conteúdo - Perfil */}
+        {activeTab === 'profile' && (
+          <div className={`bg-gradient-to-b ${getElementColor(isEditing ? editProfile.element : userProfile.element)} rounded-2xl shadow-2xl overflow-hidden`}>
+            
+            {!isEditing ? (
+              <>
+                {/* Visualização do Perfil */}
+                <div className="h-96 flex items-center justify-center text-9xl bg-black/30">
+                  {userProfile.photo}
+                </div>
+
+                <div className="p-6 bg-black/50 backdrop-blur">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">{userProfile.name}, {userProfile.age}</h2>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
+                      {getElementIcon(userProfile.element)}
+                      <span className="text-sm text-white">{userProfile.element}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-200 text-sm mb-4">{userProfile.bio}</p>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {userProfile.interests.map((interest, i) => (
+                      <span key={i} className="bg-white/10 px-3 py-1 rounded-full text-xs text-gray-300">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setEditProfile({...userProfile});
+                      setIsEditing(true);
+                    }}
+                    className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2"
+                  >
+                    <Settings className="w-5 h-5" />
+                    Editar Perfil
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Edição do Perfil */}
+                <div className="p-6 bg-black/50 backdrop-blur space-y-4">
+                  <h3 className="text-xl font-bold text-white mb-4">Editar Perfil</h3>
+                  
+                  {/* Escolher Emoji */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Escolha seu ícone:</label>
+                    <div className="flex flex-wrap gap-2">
+                      {emojis.map((emoji) => (
+                        <button
+                          key={emoji}
+                          onClick={() => setEditProfile({...editProfile, photo: emoji})}
+                          className={`text-4xl p-2 rounded-lg transition-all ${
+                            editProfile.photo === emoji 
+                              ? 'bg-red-600 scale-110' 
+                              : 'bg-white/10 hover:bg-white/20'
+                          }`}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Nome */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Nome:</label>
+                    <input
+                      type="text"
+                      value={editProfile.name}
+                      onChange={(e) => setEditProfile({...editProfile, name: e.target.value})}
+                      className="w-full bg-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  </div>
+
+                  {/* Idade */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Idade:</label>
+                    <input
+                      type="number"
+                      value={editProfile.age}
+                      onChange={(e) => setEditProfile({...editProfile, age: parseInt(e.target.value)})}
+                      className="w-full bg-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  </div>
+
+                  {/* Elemento */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Elemento Paranormal:</label>
+                    <select
+                      value={editProfile.element}
+                      onChange={(e) => setEditProfile({...editProfile, element: e.target.value})}
+                      className="w-full bg-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+                      <option value="Sangue">Sangue</option>
+                      <option value="Morte">Morte</option>
+                      <option value="Energia">Energia</option>
+                      <option value="Conhecimento">Conhecimento</option>
+                      <option value="Medo">Medo</option>
+                    </select>
+                  </div>
+
+                  {/* Bio */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Bio:</label>
+                    <textarea
+                      value={editProfile.bio}
+                      onChange={(e) => setEditProfile({...editProfile, bio: e.target.value})}
+                      rows="3"
+                      className="w-full bg-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                    />
+                  </div>
+
+                  {/* Interesses */}
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Interesses (separados por vírgula):</label>
+                    <input
+                      type="text"
+                      value={editProfile.interests.join(', ')}
+                      onChange={(e) => setEditProfile({
+                        ...editProfile, 
+                        interests: e.target.value.split(',').map(i => i.trim())
+                      })}
+                      className="w-full bg-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+                  </div>
+
+                  {/* Botões */}
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      onClick={handleCancelEdit}
+                      className="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg font-semibold text-white"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSaveProfile}
+                      className="flex-1 bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold text-white"
+                    >
+                      Salvar
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Modal de Match */}
+      {showMatch && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 animate-pulse">
+          <div className="text-center">
+            <div className="text-8xl mb-4">💀❤️🔥</div>
+            <h2 className="text-4xl font-bold text-red-500 mb-2">É UM MATCH!</h2>
+            <p className="text-gray-300">Vocês se conectaram no plano paranormal</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+        }
